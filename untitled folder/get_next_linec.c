@@ -6,7 +6,7 @@
 /*   By: mmathivh <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 10:23:46 by mmathivh          #+#    #+#             */
-/*   Updated: 2018/06/23 08:31:13 by mmathivh         ###   ########.fr       */
+/*   Updated: 2018/06/22 07:24:09 by mmathivh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,19 @@ static int ft_nl(char const *s)
 		i++;
 	return (i);
 }
-
+/*
 static char *ft_strjoinfree(char *s1, char *s2, int ret)
 {
+	int		len1;
+	int		len2;
 	char	*temp;
-	char	len;
 
-	ret = ft_strlen(s1) + ret;
-	temp = (char*)malloc(sizeof(char) * ret + 1);
+	len1 = ft_strlen(s1);
+	len2 = ret;
+	temp = (char*)malloc(sizeof(char) * (len1 + len2) + 1);
 	ft_strcpy(temp, s1);
 	ft_strcat(temp, s2);
+	free(s1);
 	return (temp);
 }
 
@@ -52,30 +55,32 @@ static char *ft_strsubfree(char *s, int start, int len)
 	temp[i] = '\0';
 	free(s);
 	return (temp);
-} 
-int	get_next_line(const int fd, char **line)
+} */
+int	get_next_linec(const int fd, char **line)
 {
 	int			ret;
 	int			len;
+	int			i;
 	char		buf[BUFF_SIZE + 1];
 	static char *sstr;
 
 	if ((fd < 0) || !line || (ret = read(fd, buf, 0) < 0))
 		return (-1);
+	i = 0;
 	if (!sstr)
 		sstr = ft_strnew(0);
 	while ((ret = read(fd, buf, BUFF_SIZE))) 
 	{
 		buf[ret] = '\0';
-		sstr = ft_strjoinfree(sstr, buf, ret);
+		sstr = ft_strjoin(sstr, buf);
 		if (ft_strchr(buf, '\n'))
 		    break;
 	}
 	if (!(len = ft_strlen(sstr)))
 		return (0);
-	ret = ft_nl(sstr);
-	*line = ft_strsub(sstr, 0, ret);
-	sstr = ft_strsub(sstr, ret + 1 , len);
+	i = ft_nl(sstr);
+	*line = ft_strsub(sstr, 0, i);
+	sstr = ft_strsub(sstr, i + 1 , len);
 	return (1);
 }
 /*
